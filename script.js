@@ -18,11 +18,15 @@ document.addEventListener('DOMContentLoaded', function () {
             if (line.startsWith('#EXTINF')) {
                 const title = line.split(',')[1].trim();
                 const url = lines[i + 1].trim();
-                
-                // Adicione a linha abaixo para obter a URL da imagem associada
-                const imageUrl = lines[i + 2].trim(); 
 
-                playlistItems.push({ title, url, imageUrl });
+                // Verifica se há uma linha válida para a URL da imagem
+                if (lines[i + 2] && lines[i + 2].trim().startsWith('http')) {
+                    const imageUrl = lines[i + 2].trim();
+                    playlistItems.push({ title, url, imageUrl });
+                } else {
+                    // Se não houver URL de imagem válida, use uma imagem padrão ou deixe em branco
+                    playlistItems.push({ title, url, imageUrl: 'URL_DA_IMAGEM_PADRAO' });
+                }
             }
         }
 
