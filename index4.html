@@ -66,9 +66,12 @@
     }
 
     // Função para abrir o link em outra página
-    function abrirLink(link) {
-        window.open(link, '_blank');
-    }
+ // Função para abrir o link em outra página com suporte para vídeos
+function abrirLink(link) {
+    // Abrir a página player.html com o URL do vídeo como parâmetro
+    window.open('player.html?video=' + encodeURIComponent(link), '_blank');
+}
+
 
     // Carregar a lista ao carregar a página
     $(document).ready(function() {
