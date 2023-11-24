@@ -8,22 +8,50 @@
     <link href="https://vjs.zencdn.net/7.14.3/video-js.css" rel="stylesheet" />
     <script src="https://vjs.zencdn.net/7.14.3/video.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.15.0/videojs-contrib-hls.js" integrity="sha512-UILPODLUJKA624A9/OruLNgBsMOYv+ON5Mw8f3ZKK+QTjxjncEtinZw9nVecHl4Vzd1+eOlEcGLqjpaQrIy49g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="./video-js.css" rel="stylesheet">
+    <link href="./videojs-mobile-ui.css" rel="stylesheet">
+    <link href="./videojs-playlist-ui.css" rel="stylesheet">
+    <style>
+        .testEl {
+            width: 10%;
+            height: 10%;
+            position: absolute;
+            top: 0;
+            pointer-events: none;
+            display: none;
+          }
+    </style>
  
 </head>
 <body>
     <!-- Container para o player de vídeo -->
-    <video id="meuVideo" class="video-js vjs-default-skin" controls width="640" height="360">
+    <video id="videojs-mobile-ui-player" class="video-js vjs-fluid vjs-big-play-centered vjs-default-skin" controls playsinline >
         <!-- Fontes de vídeo -->
         <source src="" type="">
         <source src="" type="">
         <!-- Adicione mais fontes conforme necessário para suporte a diferentes formatos -->
     </video>
-
+    <script src="./video.js"></script>
+    <script src="./videojs-mobile-ui.js"></script>
+    <script src="videojs-playlist.js"></script>
+    <script src="videojs-playlist-ui.js"></script>
     <script>
         // Função para configurar e reproduzir o vídeo
         function reproduzirVideo(url) {
-            var meuVideo = videojs('meuVideo');
+            var meuVideo = videojs('videojs-mobile-ui-player', {
 
+
+                fluid: true,
+                controls: true,
+
+        
+        
+        
+              },
+        
+              );
+ 
+            
             // Limpar fontes existentes
             meuVideo.src('');
             
@@ -56,5 +84,81 @@
             return resultados === null ? '' : decodeURIComponent(resultados[1].replace(/\+/g, ' '));
         }
     </script>
+    
+    <script>
+        (function (window, videojs) {
+          var options = {
+            fullscreen: {
+              enterOnRotate: true,
+              exitOnRotate: true,
+              lockOnRotate: true,
+              iOS: false,
+              disabled: false
+            },
+            touchControls: {
+              seekSeconds: 10,
+              tapTimeout: 300,
+              disableOnEnd: false,
+              disabled: false
+            }
+          };
+  
+          var url = new URL(window.location);
+          if (url.searchParams.has('options')) {
+            options = JSON.parse(url.searchParams.get('options'));
+          }
+  
+          console.log(JSON.stringify(options, null, 2));
+  
+          Object.keys(options).forEach(function (section) {
+            Object.keys(options[section]).forEach(function (prop) {
+              const val = options[section][prop];
+  
+              if (prop === 'disabled') {
+                prop = `${section}Disabled`;
+              }
+  
+              if (typeof val === 'boolean') {
+                document.getElementById(prop).checked = val;
+              }
+              if (typeof val === 'number') {
+                document.getElementById(prop).value = val;
+              }
+            });
+          });
+  
+          document.getElementById('options').querySelectorAll('input').forEach(function (opt) {
+            opt.addEventListener('change', function () {
+              if (this.type === 'checkbox') {
+                const param = this.id.endsWith('Disabled') ? 'disabled' : this.id;
+  
+                options[this.getAttribute('data-section')][param] = this.checked;
+              } else {
+                options[this.getAttribute('data-section')][this.id] = parseFloat(this.value);
+              }
+              console.log(options);
+            });
+          });
+  
+          document.getElementById('reload').addEventListener('click', function () {
+            url.searchParams.set('options', JSON.stringify(options));
+  
+            window.location = url.href;
+          })
+  
+          window.addEventListener('orientationchange', function () {
+            var el = document.createElement('li');
+            var message = (new Date).toTimeString().split(' ')[0] + ' ' + window.orientation;
+            message += (screen && screen.orientation ? ' ' + screen.orientation.type + ' ' + screen.orientation.angle : '');
+            el.textContent = message;
+            console.log(message);
+            document.getElementById('log').appendChild(el);
+          });
+  
+          var testPlayer = window.testPlayer = videojs('videojs-mobile-ui-player');
+          testPlayer.endscreen = function () { };
+          testPlayer.mobileUi(options);
+        }(window, window.videojs));
+      </script>
 </body>
 </html>
