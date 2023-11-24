@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Filmes</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        /* Estilo para limitar o tamanho das imagens e torná-las responsivas */
+        img {
+            max-width: 300px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Container para exibir a lista -->
+<div id="listaFilmes"></div>
+
+<!-- Script para carregar e exibir a lista -->
+<script>
+    // URL da lista M3U
+    var urlLista = "https://tinyurl.com/jppfilmes";
+
+    // Função para carregar a lista M3U
+    function carregarLista() {
+        $.get(urlLista, function(data) {
+            // Dividir as linhas da lista
+            var linhas = data.split('\n');
+
+            // Container para exibir a lista de filmes
+            var listaFilmes = $("#listaFilmes");
+
+            // Loop através das linhas e extrair informações
+            for (var i = 0; i < linhas.length; i++) {
+                if (linhas[i].startsWith('#EXTINF:')) {
+                    // Extrair informações do filme (nome, imagem, link)
+                    var nomeMatch = linhas[i].match(/tvg-name="(.*?)"/);
+                    var imagemMatch = linhas[i].match(/tvg-logo="(.*?)"/);
+                    var linkMatch = linhas[i + 1];  // O link está na linha seguinte
+
+                    if (nomeMatch && imagemMatch && linkMatch) {
+                        var nomeFilme = nomeMatch[1];
+                        var imagemFilme = imagemMatch[1];
+
+                        var filmeHTML = '<div>';
+                        filmeHTML += '<h3>' + nomeFilme + '</h3>';
+                        filmeHTML += '<img src="' + imagemFilme + '" alt="' + nomeFilme + '">';
+                        filmeHTML += '<button onclick="abrirLink(\'' + linkMatch + '\')">Assistir</button>';
+                        filmeHTML += '</div>';
+
+                        // Adicionar o filme ao container
+                        listaFilmes.append(filmeHTML);
+                    }
+                }
+            }
+        });
+    }
+
+    // Função para abrir o link em outra página
+    function abrirLink(link) {
+        window.open(link, '_blank');
+    }
+
+    // Carregar a lista ao carregar a página
+    $(document).ready(function() {
+        carregarLista();
+    });
+</script>
+
+</body>
+</html>
