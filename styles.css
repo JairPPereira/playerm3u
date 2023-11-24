@@ -1,0 +1,17 @@
+#playlist {
+    margin-top: 20px;
+}
+
+#playlist ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#playlist li {
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+#playlist li:hover {
+    text-decoration: underline;
+}
