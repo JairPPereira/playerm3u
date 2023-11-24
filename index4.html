@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Filmes</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" as="style">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="https://jptv.netlify.app/css/infinitta.min.css" rel="stylesheet">
     <style>
         /* Estilo para limitar o tamanho das imagens e torná-las responsivas */
         img {
@@ -16,8 +19,12 @@
 <body>
 
 <!-- Container para exibir a lista -->
+<section class="bg-primary p-t-40 p-b-40">
+    <div class="container">
+      
+      <div class="row min-gutter">
 <div id="listaFilmes"></div>
-
+</div></div></section>
 <!-- Script para carregar e exibir a lista -->
 <script>
     // URL da lista M3U
@@ -44,10 +51,10 @@
                         var nomeFilme = nomeMatch[1];
                         var imagemFilme = imagemMatch[1];
 
-                        var filmeHTML = '<div>';
+                        var filmeHTML = '<div class="col-sm-2 col-xs-4">';
+                        filmeHTML += '<img class="m-t-10 b-radius-5 img-responsive center-block" style="width: 140px; height: 140px;" src="' + imagemFilme + '" alt="' + nomeFilme + '">';
                         filmeHTML += '<h3>' + nomeFilme + '</h3>';
-                        filmeHTML += '<img src="' + imagemFilme + '" alt="' + nomeFilme + '">';
-                        filmeHTML += '<button onclick="abrirLink(\'' + linkMatch + '\')">Assistir</button>';
+                        filmeHTML += '<button onclick="abrirLink(\'' + linkMatch + '\')" style="background-color: black;">Assistir</button>';
                         filmeHTML += '</div>';
 
                         // Adicionar o filme ao container
@@ -68,6 +75,8 @@
         carregarLista();
     });
 </script>
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://jptv.netlify.app/assets/plugins/validation/css/formValidation.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </body>
 </html>
